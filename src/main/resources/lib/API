@@ -1,0 +1,24 @@
+localhost:8202/api/v1/products/add
+{
+	"productId" :"1",
+	"name": "Desktop",
+	"brand" :"Lenovo",
+	"price":"10000",
+	"imageUrl":"/a/b/c1"
+}
+---
+GET localhost:8202/api/v1/products/viewAll
+---
+GET localhost:8202/api/v1/products/view/1
+---
+POST localhost:8202/api/v1/products/update
+{
+	"productId" :"2",
+	"name": "Desktop",
+	"brand" :"Lenovo",
+	"price":"10000",
+	"imageUrl":"/a/b/c/d",
+	"description":"New 2025 Lenovo Laptop"
+}
+---
+POST localhost:8202/api/v1/products/delete/1
