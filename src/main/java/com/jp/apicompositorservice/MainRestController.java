@@ -1,8 +1,10 @@
 package com.jp.apicompositorservice;
 
+import com.netflix.discovery.converters.Auto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,9 @@ public class MainRestController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
     private static final Logger log = LoggerFactory.getLogger(MainRestController.class);
 
     @GetMapping("/test")
@@ -36,6 +41,14 @@ public class MainRestController {
         log.info("Received request to view all orders");
 
             if(customerService.validateToken(token)){
+
+                List<OrderSummary> cachedSummary = (List<OrderSummary>)redisTemplate.opsForValue().
+                        get("OrderSummary");
+
+                if(cachedSummary!=null && cachedSummary.size()>0){
+                    log.info("Replying the data from the cache ");
+                    return ResponseEntity.ok(cachedSummary);
+                }
 
                 List<OrderSummary> summaryData = new ArrayList<>();
 
@@ -80,6 +93,8 @@ public class MainRestController {
 
                     summaryData.add(summaryObj);
                 });
+
+                redisTemplate.opsForValue().set("OrderSummary",summaryData);
 
                 return ResponseEntity.ok(summaryData);
 

@@ -3,9 +3,11 @@ package com.jp.apicompositorservice;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class OrderSummary {
+public class OrderSummary implements Serializable {
 
     private String orderId;
     private String fullname;
